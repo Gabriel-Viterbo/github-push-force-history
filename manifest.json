@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "GitHub Push Force History",
+  "version": "1.0.0",
+  "description": "Force-push history for GitHub pull requests - compare links from the PR timeline.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "github-push-force-history@extension.local",
+      "strict_min_version": "109.0"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": [],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://github.com/*/*/pull/*"
+      ],
+      "js": [
+        "src/content.js"
+      ],
+      "css": [
+        "src/styles.css"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

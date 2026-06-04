@@ -1,0 +1,32 @@
+# Generated userscript (run scripts/build-userscript.ps1)
+dist/
+
+# Packed extension artifacts (local builds)
+*.crx
+*.xpi
+*.zip
+
+# Environment and secrets
+.env
+.env.*
+*.pem
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+*~
+
+# Logs and caches
+*.log
+.npm/
+node_modules/
+
+# Local tooling (not part of the extension)
+.cursor/
+agent-tools/
