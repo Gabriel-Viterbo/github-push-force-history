@@ -1,5 +1,7 @@
 # Generated userscript (run scripts/build-userscript.ps1)
 dist/
+build/
+github-push-force-history.zip
 
 # Packed extension artifacts (local builds)
 *.crx
