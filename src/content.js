@@ -19,6 +19,9 @@
   /** @type {number} */
   let selectedIndex = 0;
 
+  /** @type {boolean} */
+  let panelMinimized = false;
+
   /** @type {ReturnType<typeof setTimeout> | null} */
   let debounceTimer = null;
 
@@ -524,6 +527,37 @@
   }
 
   /**
+   * @param {HTMLElement} panel
+   */
+  function applyPanelMinimizedState(panel) {
+    panel.classList.toggle("gh-fph-panel--minimized", panelMinimized);
+    const toggle = panel.querySelector(".gh-fph-minimize-btn");
+    if (toggle) {
+      toggle.textContent = panelMinimized ? "Expand" : "Minimize";
+      toggle.setAttribute("aria-expanded", String(!panelMinimized));
+      toggle.title = panelMinimized ? "Expand panel" : "Minimize panel";
+    }
+  }
+
+  /**
+   * @returns {HTMLButtonElement}
+   */
+  function createMinimizeButton() {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "gh-fph-btn gh-fph-minimize-btn";
+    btn.textContent = panelMinimized ? "Expand" : "Minimize";
+    btn.setAttribute("aria-expanded", String(!panelMinimized));
+    btn.title = panelMinimized ? "Expand panel" : "Minimize panel";
+    btn.addEventListener("click", () => {
+      panelMinimized = !panelMinimized;
+      const panel = document.getElementById(PANEL_ID);
+      if (panel) applyPanelMinimizedState(panel);
+    });
+    return btn;
+  }
+
+  /**
    * Short display SHA (7 chars like GitHub UI).
    * @param {string} sha
    */
@@ -550,11 +584,11 @@
 
     const header = document.createElement("div");
     header.className = "gh-fph-header";
-    const title = document.createElement("h2");
-    title.className = "gh-fph-title";
-    title.textContent = "GitHub Push Force History";
-    header.appendChild(title);
+    header.appendChild(createMinimizeButton());
     panel.appendChild(header);
+
+    const body = document.createElement("div");
+    body.className = "gh-fph-body";
 
     const toolbar = document.createElement("div");
     toolbar.className = "gh-fph-toolbar";
@@ -595,13 +629,15 @@
     });
 
     toolbar.append(refreshBtn, prevBtn, nextBtn);
-    panel.appendChild(toolbar);
+    body.appendChild(toolbar);
 
     if (events.length === 0) {
       const empty = document.createElement("p");
       empty.className = "gh-fph-empty";
       empty.textContent = "No force-push history found in this PR timeline.";
-      panel.appendChild(empty);
+      body.appendChild(empty);
+      panel.appendChild(body);
+      applyPanelMinimizedState(panel);
       return;
     }
 
@@ -664,7 +700,9 @@
       list.appendChild(item);
     });
 
-    panel.appendChild(list);
+    body.appendChild(list);
+    panel.appendChild(body);
+    applyPanelMinimizedState(panel);
   }
 
   /**
